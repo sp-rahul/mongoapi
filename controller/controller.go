@@ -15,7 +15,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-const connectionString = "mongodb+srv://RuhulAmin:1234@cluster0.yvyzbhn.mongodb.net/?retryWrites=true&w=majority"
+const connectionString = "mongodb+srv://sp:1234@cluster0.yvyzbhn.mongodb.net/?retryWrites=true&w=majority"
 const dbName = "netflix"
 const colName = "watchlist"
 
@@ -35,8 +35,8 @@ func init() {
 	}
 	fmt.Println("MongoDB connection success")
 
-	collection = (*mongo.Collection)(client).Database(dbName).Collection(colName)
-
+	//collection = (mongo.Collection)(client).Database(dbName).Collection(colName)
+	collection = client.Database(dbName).Collection(colName)
 	// collection instance
 	fmt.Println("Collection instance is ready")
 
@@ -121,7 +121,7 @@ func getAllMovies() []primitive.M {
 
 // Actual collector ~ file
 func GetMyAllMovies(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "Application/x-www-form-urlencode")
+	w.Header().Set("Content-Type", "application/x-www-form-urlencode")
 	allMovies := getAllMovies()
 	json.NewEncoder(w).Encode(allMovies)
 
@@ -131,7 +131,7 @@ func CreateMovie(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Allow-control-Allow-Methods", "POST")
 
 	var movie model.Netflix
-	_ = json.NewDecoder(r.Body).Decode(movie)
+	_ = json.NewDecoder(r.Body).Decode(&movie)
 	insertOneMovie(movie)
 	json.NewEncoder(w).Encode(movie)
 
@@ -158,7 +158,7 @@ func DeleteAllMovies(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Contest-Type", "application/x-www-form-urlencode")
 	w.Header().Set("Allow-control-Allow-Methods", "DELETE")
 
-	count := eleteAllMovie()
+	count := deleteAllMovie()
 	json.NewEncoder(w).Encode(count)
 
 }
